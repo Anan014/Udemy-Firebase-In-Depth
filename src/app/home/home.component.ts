@@ -1,28 +1,31 @@
-import {Component, OnInit} from '@angular/core';
-import {Course} from '../model/course';
-import {Observable, of} from 'rxjs';
-import {catchError, map} from 'rxjs/operators';
-import {AngularFirestore} from '@angular/fire/firestore';
-import {Router} from '@angular/router';
-
+import { Component, OnInit } from "@angular/core";
+import { Course } from "../model/course";
+import { Observable, of } from "rxjs";
+import { catchError, map } from "rxjs/operators";
+import { AngularFirestore } from "@angular/fire/firestore";
+import { Router } from "@angular/router";
+import { CourseService } from "../services/courses.service";
 
 @Component({
-    selector: 'home',
-    templateUrl: './home.component.html',
-    styleUrls: ['./home.component.css']
+  selector: "home",
+  templateUrl: "./home.component.html",
+  styleUrls: ["./home.component.css"],
 })
 export class HomeComponent implements OnInit {
-    beginnersCourses$: Observable<Course[]>;
+  beginnersCourses$: Observable<Course[]>;
 
-    advancedCourses$: Observable<Course[]>;
+  advancedCourses$: Observable<Course[]>;
 
-    constructor(
-      private router: Router) {
+  constructor(private router: Router, private coursesServices: CourseService) {}
 
-    }
+  ngOnInit() {
+    this.reloadCourses();
+  }
 
-    ngOnInit() {
-
-    }
-
+  reloadCourses() {
+    this.beginnersCourses$ =
+      this.coursesServices.loadCoursesByCategory("BEGINNER");
+    this.advancedCourses$ =
+      this.coursesServices.loadCoursesByCategory("ADVANCED");
+  }
 }
